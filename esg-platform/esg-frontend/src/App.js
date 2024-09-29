@@ -1,104 +1,96 @@
 import React, { useState } from 'react';
+import './App.css'; // Import the CSS file
 
 function App() {
   const [companyName, setCompanyName] = useState('');
   const [focusArea, setFocusArea] = useState('');
   const [report, setReport] = useState('');
-  const [loading, setLoading] = useState(false); // New state for loading
-  const [error, setError] = useState(null); // New state for error handling
+  const [file, setFile] = useState(null); // For file uploads
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
-    setError(null); // Reset any previous error
+    
+    const response = await fetch('http://localhost:5000/api/esg-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ companyName, focusArea }),
+    });
 
-    try {
-      const response = await fetch('http://localhost:5000/api/esg-report', { // Full backend URL
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ companyName, focusArea }),
-      });
+    const data = await response.json();
+    setReport(data.report);
+  };
 
-      if (!response.ok) {
-        throw new Error('Failed to generate report'); // Handle non-200 responses
-      }
+  // Handle file upload for CSV/XML
+  const handleFileUpload = async (type) => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-      const data = await response.json();
-      setReport(data.report);
-    } catch (err) {
-      setError(err.message); // Capture error and display
-    } finally {
-      setLoading(false); // Stop loading
-    }
+    const url = type === 'csv' 
+      ? 'http://localhost:5000/api/import/csv' 
+      : 'http://localhost:5000/api/import/xml';
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    alert(data.message);
+  };
+
+  // Download CSV/XML data
+  const handleExport = (type) => {
+    const url = type === 'csv' 
+      ? 'http://localhost:5000/api/export/csv' 
+      : 'http://localhost:5000/api/export/xml';
+
+    window.open(url, '_blank');
   };
 
   return (
-    <div className="App" style={styles.container}>
+    <div className="App">
       <h1>AI-powered ESG Platform</h1>
-
-      <form onSubmit={handleSubmit} style={styles.form}>
+      
+      {/* ESG Report Form */}
+      <form onSubmit={handleSubmit}>
         <input 
           type="text" 
           placeholder="Company Name" 
           value={companyName} 
           onChange={(e) => setCompanyName(e.target.value)} 
-          style={styles.input}
         />
         <input 
           type="text" 
           placeholder="Focus Area" 
           value={focusArea} 
           onChange={(e) => setFocusArea(e.target.value)} 
-          style={styles.input}
         />
-        <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Generating...' : 'Generate Report'}
-        </button>
+        <button type="submit">Generate Report</button>
       </form>
-
-      {/* Display loading, error, or report */}
-      {loading && <p>Loading...</p>}
-      {error && <p style={styles.error}>{error}</p>}
+      
       {report && (
-        <div style={styles.report}>
+        <div className="report">
           <h2>ESG Report</h2>
           <p>{report}</p>
         </div>
       )}
+
+      {/* File Upload for CSV/XML */}
+      <div className="upload-section">
+        <h3>Import Data</h3>
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <button onClick={() => handleFileUpload('csv')}>Upload CSV</button>
+        <button onClick={() => handleFileUpload('xml')}>Upload XML</button>
+      </div>
+
+      {/* Export Data as CSV/XML */}
+      <div className="export-section">
+        <h3>Export Data</h3>
+        <button onClick={() => handleExport('csv')}>Download CSV</button>
+        <button onClick={() => handleExport('xml')}>Download XML</button>
+      </div>
     </div>
   );
 }
-
-// Basic inline styles
-const styles = {
-  container: {
-    textAlign: 'center',
-    padding: '20px',
-  },
-  form: {
-    marginBottom: '20px',
-  },
-  input: {
-    padding: '10px',
-    margin: '10px',
-    fontSize: '16px',
-    width: '200px',
-  },
-  button: {
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
-  },
-  report: {
-    backgroundColor: '#f4f4f4',
-    padding: '20px',
-    marginTop: '20px',
-    borderRadius: '8px',
-  },
-  error: {
-    color: 'red',
-    fontWeight: 'bold',
-  },
-};
 
 export default App;

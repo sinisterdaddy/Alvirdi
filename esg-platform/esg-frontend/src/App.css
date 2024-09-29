@@ -1,38 +1,105 @@
+/* General container styling */
 .App {
   text-align: center;
+  padding: 40px;
+  background-color: #f9f9f9;
+  font-family: 'Arial', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Styling for headings */
+h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h2 {
+  font-size: 1.75rem;
+  color: #4caf50;
+  margin-bottom: 15px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Form styling */
+form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin-bottom: 30px;
+}
+
+input {
+  padding: 10px;
+  margin: 10px;
+  font-size: 16px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4caf50;
   color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #45a049;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Styling for report display */
+.report {
+  background-color: #f4f4f4;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.report p {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* File upload and export buttons */
+.upload-section,
+.export-section {
+  margin: 20px 0;
+}
+
+.upload-section input[type="file"] {
+  display: block;
+  margin: 10px 0;
+}
+
+.upload-section button,
+.export-section button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-section button:hover,
+.export-section button:hover {
+  background-color: #1e88e5;
+}
+
+/* Error and alert styling */
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }

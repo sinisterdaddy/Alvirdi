@@ -22,7 +22,7 @@ async function generateESGSummary(companyName, focusArea) {
 
     // Call OpenAI chat completion endpoint (for models like gpt-3.5-turbo, gpt-4)
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',  // Use 'gpt-4' if you have access
+      model: 'gpt-4o',  // Use 'gpt-4' if you have access
       messages: messages,      // Send the conversation as a list of messages
       max_tokens: 300,         // Set token limit for the response
     });
